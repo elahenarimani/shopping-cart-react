@@ -1,23 +1,122 @@
 import logo from './logo.svg';
 import './App.css';
-
+import {useState} from 'react';
+import Cart from './components/cart/Cart'
+import Button from './components/button/Button';
+import CalcCart from './components/calc-cart/CalcCart';
+import SendPersonalInformation from './components/senPersonalInformatin/SendPersonalInformation';
 function App() {
+  const [dressList , setDressList] = useState([
+    {img:"./image/dress1.jpg"  , price: "10.9 $ " , title:"cami maxi dress in polka dot"  , id:1},
+    {img:"./image/dress2.jpg"  , price: "14.9 $ " , title:"Midi dress in pink ditsy floral"  , id:2},
+    {img:"./image/dress3.jpg"  , price: "18.9 $ " , title:"Midi sundress with ruched front"  , id:3},
+    {img:"./image/dress4.jpg"  , price: "25.9 $ " , title:"cami maxi dress in polka dot"  , id:4},
+    {img:"./image/dress5.jpg"  , price: "29.9 $ " , title:"Midi sundress with shirring detail"  , id:5},
+    {img:"./image/dress6.jpg"  , price: "49.9 $ " , title:"Midi sundress with ruched front"  , id:6}
+  ])
+  const [buyCart , setBuyCart] = useState([])
+  const [buyMode , setBuyMode] = useState({mode:"nothing" , id:null})
+  function addDressToCardFN(id){
+      const findIndex = buyCart.findIndex(item => item.idDress == id )
+            
+            if(findIndex == -1 ){
+                  setBuyCart([...buyCart,{idDress:id ,count:1}])
+            } else{
+                  buyCart[findIndex].count +=1
+            }
+            console.log(buyCart)
+            setBuyMode({mode:"wantToBuy" , id:null})
+  }
+  function contBuyCart(){
+      return buyCart.length
+  }
+function removeFN(id){
+     console.log(id)
+      const finder = buyCart.findIndex(item => item.idDress == id)
+      console.log(finder)
+      if(finder>=0){
+            if(buyCart[finder].count>1){
+                  buyCart[finder].count -=1
+            }else{
+                  setBuyCart(buyCart.filter(item => item.idDress != id)) 
+            }
+      }
+      console.log(buyCart)
+}
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+          <div>
+               <header className=' w-full h-[60px] bg-[#203040] text-white flex justify-start items-center pl-[10px]'>
+                    <p>React Shoppin cart</p>
+               </header>
+               <main className=' w-full lg:max-w[1024px] xl:max-w-[80%] h-full pl-[5px] pr-[10px] flex flex-col justify-between items-center xl:flex-row xl:justify-between xl:items-start xl:gap-[5px]  '>
+                    <div className='dress-wrapper xl:w-[74%] flex flex-col justify-between'>
+                          <div className='option-wrapper w-full h-[60px] border-b-[2px] flex justify-between items-center border-gray-200  '>
+                              <div className='w-full'> 
+                                   <p>6 Products</p>
+                              </div>    
+                              <div className='w-full'>
+                                  <span className='mr-[8px]'>Order</span>
+                                  <select name="price">
+                                        <option value="Lowest">Lowest</option>
+                                        <option value="Highest">Highest</option>
+                                  </select>
+                              </div>
+                              <div className='w-full'> 
+                                  <span className='mr-[8px]'>Filter</span>
+                                  <select name="size">
+                                        <option value="ALL">ALL</option>
+                                        <option value="Xs">Xs</option>
+                                        <option value="S">S</option>
+                                        <option value="M">M</option>
+                                        <option value="L">L</option>
+                                        <option value="XL">XL</option>
+                                        <option value="XXL">XXL</option>
+                                  </select>
+                              </div>
+                          </div>
+                          <div className='cart w-full h-full grid justify-between items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[30px] '>
+                                 {
+                                  dressList.map(item => {
+                                    return( 
+                                      <Cart img={item.img} price={item.price} title={item.title} id={item.id} addDressToCard={addDressToCardFN}/>
+                                     )})     
+                                 }          
+                          </div>
+                    </div>
+                    <div className='calc-Price h-full w-[25%] xl:w-[25%]  '>
+                          <div> 
+                              {buyMode?.mode == "wantToBuy" ?
+                               <div className='w-full h-[60px]  flex justify-center items-center border-b-[2px] border-gray-200'>
+                                     <p>you have {contBuyCart()} in cart</p>
+                               </div>:
+                               <div className='w-full h-[60px]  flex justify-center items-center border-b-[2px] border-gray-200'>
+                                     <p>Cart is empty</p>
+                               </div>
+                              
+                              }
+                               <div className='w-full h-full pl-[30px]  pt-[15px]' >
+                                    {buyCart.map(item => {
+                                           const finder = dressList.find(dress => dress.id == item.idDress)
+                                           return(
+                                                <CalcCart img={finder.img} title={finder.title} price={finder.price} count={item.count} remove={removeFN} id={item.idDress}/>
+                                           )
+                                    }
+                                          )}
+                                           <div className="w-full flex justify-between items-center">
+                                                  <p>Total:</p>
+                                                  <Button onClickHandler={() => <SendPersonalInformationgit />}>Proceed</Button>
+                                                  
+                                          </div>
+                                        
+                               </div>
+                          </div>   
+                    </div>
+               </main>
+               <footer className='w-full h-[60px] '>
+                      <p className='w-full h-full bg-[#203040] flex justify-center items-center text-white text-[18px]'>All right is reserved</p>
+               </footer>
+          </div>
     </div>
   );
 }
