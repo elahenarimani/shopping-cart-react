@@ -16,6 +16,13 @@ function App() {
   ])
   const [buyCart , setBuyCart] = useState([])
   const [buyMode , setBuyMode] = useState({mode:"nothing" , id:null})
+  const [dataMode ,  setDataMode] = useState("deactive");
+  const [onePrice , setOnePrice] = useState(0)
+  const [a , seta] = useState(0)
+  
+
+  
+  
   function addDressToCardFN(id){
       const findIndex = buyCart.findIndex(item => item.idDress == id )
             
@@ -23,9 +30,12 @@ function App() {
                   setBuyCart([...buyCart,{idDress:id ,count:1}])
             } else{
                   buyCart[findIndex].count +=1
+                  
             }
             console.log(buyCart)
             setBuyMode({mode:"wantToBuy" , id:null})
+      
+         
   }
   function contBuyCart(){
       return buyCart.length
@@ -41,8 +51,26 @@ function removeFN(id){
                   setBuyCart(buyCart.filter(item => item.idDress != id)) 
             }
       }
-      console.log(buyCart)
+      
 }
+ function totalPrice(){
+       let totalPrice = 0
+       const findeBuyCart = buyCart.findIndex(item => item.count != 0)
+       const a = buyCart[findeBuyCart].idDress
+      
+       const finder = dressList.find(item => item.id == a)
+       totalPrice = totalPrice + ((finder.price) * (a.count))
+       return totalPrice
+//       buyCart.forEach(item => {
+            
+//             const dressPrice = dressList.find(dress => dress.id == item.idDress)?.price 
+//             setTotlCost(totalCost = totalCost + item.count * dressPrice)     
+//       })
+//       console.log(totalCost)
+//       return totalCost
+      
+ }
+
   return (
     <div className="App">
           <div>
@@ -84,7 +112,7 @@ function removeFN(id){
                                  }          
                           </div>
                     </div>
-                    <div className='calc-Price h-full w-[25%] xl:w-[25%]  '>
+                    <div className='calc-Price h-full w-[25%] xl:w-[25%] pb-[20px] '>
                           <div> 
                               {buyMode?.mode == "wantToBuy" ?
                                <div className='w-full h-[60px]  flex justify-center items-center border-b-[2px] border-gray-200'>
@@ -95,7 +123,7 @@ function removeFN(id){
                                </div>
                               
                               }
-                               <div className='w-full h-full pl-[30px]  pt-[15px]' >
+                               <div className='w-full h-full pl-[30px]  pt-[15px] ' >
                                     {buyCart.map(item => {
                                            const finder = dressList.find(dress => dress.id == item.idDress)
                                            return(
@@ -103,12 +131,16 @@ function removeFN(id){
                                            )
                                     }
                                           )}
-                                           <div className="w-full flex justify-between items-center">
-                                                  <p>Total:</p>
-                                                  <Button onClickHandler={() => <SendPersonalInformationgit />}>Proceed</Button>
-                                                  
-                                          </div>
-                                        
+                                           <div className="w-full h-full flex flex-col justify-between ">
+                                                  <div className='w-full h-full flex  justify-between items-center'>
+                                                      <p>Total:{totalPrice()}</p>
+                                                      <Button onClickHandler={() => setDataMode("active")}>Proceed</Button>
+                                                  </div>
+                                                  <div className='w-full h-full'>
+                                                      {dataMode == "active"   ?  <SendPersonalInformation/> : <></>}
+                                                  </div>
+                                                   
+                                          </div>    
                                </div>
                           </div>   
                     </div>
