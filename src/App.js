@@ -1,41 +1,39 @@
 import logo from './logo.svg';
 import './App.css';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Cart from './components/cart/Cart'
 import Button from './components/button/Button';
 import CalcCart from './components/calc-cart/CalcCart';
 import SendPersonalInformation from './components/senPersonalInformatin/SendPersonalInformation';
 function App() {
   const [dressList , setDressList] = useState([
-    {img:"./image/dress1.jpg"  , price: "10.9 $ " , title:"cami maxi dress in polka dot"  , id:1},
-    {img:"./image/dress2.jpg"  , price: "14.9 $ " , title:"Midi dress in pink ditsy floral"  , id:2},
-    {img:"./image/dress3.jpg"  , price: "18.9 $ " , title:"Midi sundress with ruched front"  , id:3},
-    {img:"./image/dress4.jpg"  , price: "25.9 $ " , title:"cami maxi dress in polka dot"  , id:4},
-    {img:"./image/dress5.jpg"  , price: "29.9 $ " , title:"Midi sundress with shirring detail"  , id:5},
-    {img:"./image/dress6.jpg"  , price: "49.9 $ " , title:"Midi sundress with ruched front"  , id:6}
+    {img:"./image/dress1.jpg"  , price: 10.9   , title:"cami maxi dress in polka dot"  , id:1 , size:"Xs"},
+    {img:"./image/dress2.jpg"  , price: 14.9   , title:"Midi dress in pink ditsy floral"  , id:2 , size : "S"},
+    {img:"./image/dress3.jpg"  , price: 18.9   , title:"Midi sundress with ruched front"  , id:3 , size: "M"},
+    {img:"./image/dress4.jpg"  , price: 25.9   , title:"cami maxi dress in polka dot"  , id:4 , size: "L"},
+    {img:"./image/dress5.jpg"  , price: 29.9   , title:"Midi sundress with shirring detail"  , id:5 , size: "XL"},
+    {img:"./image/dress6.jpg"  , price: 49.9   , title:"Midi sundress with ruched front"  , id:6 , size: "XXL"}
   ])
   const [buyCart , setBuyCart] = useState([])
   const [buyMode , setBuyMode] = useState({mode:"nothing" , id:null})
   const [dataMode ,  setDataMode] = useState("deactive");
-  const [onePrice , setOnePrice] = useState(0)
-  const [a , seta] = useState(0)
-  
-
-  
-  
+  const [totalCost, setTotalCost] = useState(0)
+  let x= {}
+  let c=0
+  const [filterDress , setFilterDress] = useState("ALL")
+  useEffect(()=>{totalPrice()},[buyCart])
   function addDressToCardFN(id){
-      const findIndex = buyCart.findIndex(item => item.idDress == id )
-            
+      const prevBuyCart = [...buyCart]
+      const findIndex = prevBuyCart.findIndex(item => item.idDress == id )
             if(findIndex == -1 ){
                   setBuyCart([...buyCart,{idDress:id ,count:1}])
             } else{
-                  buyCart[findIndex].count +=1
-                  
+                 prevBuyCart[findIndex].count +=1;
+                 setBuyCart(prevBuyCart)      
             }
             console.log(buyCart)
             setBuyMode({mode:"wantToBuy" , id:null})
-      
-         
+               
   }
   function contBuyCart(){
       return buyCart.length
@@ -52,28 +50,34 @@ function removeFN(id){
             }
       }
       
+      
 }
  function totalPrice(){
-       let totalPrice = 0
-       const findeBuyCart = buyCart.findIndex(item => item.count != 0)
-       const a = buyCart[findeBuyCart].idDress
+      //  let totalPrice = 0
+      //  const findeBuyCart = buyCart.findIndex(item => item.count != 0)
+      //  const a = buyCart[findeBuyCart].idDress
       
-       const finder = dressList.find(item => item.id == a)
-       totalPrice = totalPrice + ((finder.price) * (a.count))
-       return totalPrice
-//       buyCart.forEach(item => {
+      //  const finder = dressList.find(item => item.id == a)
+      //  totalPrice = totalPrice + ((finder.price) * (a.count))
+      //  return totalPrice
+      let total = 0
+      buyCart.forEach(item => {
             
-//             const dressPrice = dressList.find(dress => dress.id == item.idDress)?.price 
-//             setTotlCost(totalCost = totalCost + item.count * dressPrice)     
-//       })
-//       console.log(totalCost)
-//       return totalCost
+            const dressPrice = dressList.find(dress => dress.id == item.idDress)?.price 
+            // console.log({dress:dressPrice ,count:item.count})
+            total += item.count * dressPrice     
+      })
+      console.log(total)
+      setTotalCost(total)
       
  }
 
   return (
     <div className="App">
           <div>
+            {console.log(buyCart)}
+            { console.log(x)}
+            { console.log(c)}
                <header className=' w-full h-[60px] bg-[#203040] text-white flex justify-start items-center pl-[10px]'>
                     <p>React Shoppin cart</p>
                </header>
@@ -92,7 +96,7 @@ function removeFN(id){
                               </div>
                               <div className='w-full'> 
                                   <span className='mr-[8px]'>Filter</span>
-                                  <select name="size">
+                                  <select value={filterDress} onChange={(e)=>setFilterDress(e.target.value)} name="size">
                                         <option value="ALL">ALL</option>
                                         <option value="Xs">Xs</option>
                                         <option value="S">S</option>
@@ -105,7 +109,26 @@ function removeFN(id){
                           </div>
                           <div className='cart w-full h-full grid justify-between items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[30px] '>
                                  {
-                                  dressList.map(item => {
+                                  dressList.filter(item=> {if( filterDress == 'Xs'){
+                                    if(item.size.includes ('Xs')){
+                                         return item     
+                                    }}else if(item.size.includes ('Xs')){
+                                          return item
+                                    }else if(item.size.includes ('S')){
+                                          return item
+                                    }else if(item.size.includes ('M')){
+                                          return item
+                                    }else if(item.size.includes ('L')){
+                                          return item
+                                    }else if(item.size.includes ('XL')){
+                                          return item
+                                    }
+                                    else if(item.size.includes ('XXL')){
+                                          return item
+                                    }
+                                    else{
+                                          return item
+                                    }}).map(item => {
                                     return( 
                                       <Cart img={item.img} price={item.price} title={item.title} id={item.id} addDressToCard={addDressToCardFN}/>
                                      )})     
@@ -133,7 +156,7 @@ function removeFN(id){
                                           )}
                                            <div className="w-full h-full flex flex-col justify-between ">
                                                   <div className='w-full h-full flex  justify-between items-center'>
-                                                      <p>Total:{totalPrice()}</p>
+                                                      <p>Total: {totalCost}</p>
                                                       <Button onClickHandler={() => setDataMode("active")}>Proceed</Button>
                                                   </div>
                                                   <div className='w-full h-full'>

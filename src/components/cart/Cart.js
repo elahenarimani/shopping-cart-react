@@ -10,7 +10,7 @@ function Cart({img,price,title,id,addDressToCard}){
                 <a className="cursor-pointer">{title}</a>
             </div>
             <div className="w-full h-[50px] flex justify-between items-center">
-                  <p>{price}</p>
+                  <p>{price}$</p>
                   <Button onClickHandler={() => {addDressToCard(id)}}>Add To Card</Button>
             </div>  
          </div>
