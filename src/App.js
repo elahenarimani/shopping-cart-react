@@ -17,10 +17,9 @@ function App() {
   const [buyCart , setBuyCart] = useState([])
   const [buyMode , setBuyMode] = useState({mode:"nothing" , id:null})
   const [dataMode ,  setDataMode] = useState("deactive");
-  const [totalCost, setTotalCost] = useState(0)
-  let x= {}
-  let c=0
-  const [filterDress , setFilterDress] = useState("ALL")
+  const [totalCost, setTotalCost] = useState(0);
+  const [filterDress , setFilterDress] = useState("ALL");
+  const [costMode , setCostMode] = useState();
   useEffect(()=>{totalPrice()},[buyCart])
   function addDressToCardFN(id){
       const prevBuyCart = [...buyCart]
@@ -32,52 +31,38 @@ function App() {
                  setBuyCart(prevBuyCart)      
             }
             console.log(buyCart)
-            setBuyMode({mode:"wantToBuy" , id:null})
-               
-  }
-  function contBuyCart(){
-      return buyCart.length
+            setBuyMode({mode:"wantToBuy" , id:null})            
   }
 function removeFN(id){
+      const prevBuyCart = [...buyCart]
      console.log(id)
       const finder = buyCart.findIndex(item => item.idDress == id)
       console.log(finder)
       if(finder>=0){
             if(buyCart[finder].count>1){
-                  buyCart[finder].count -=1
+                  const findIndex = prevBuyCart.findIndex(item => item.idDress == id)
+                  if (findIndex > -1){
+                        prevBuyCart[findIndex].count -=1;
+                        setBuyCart(prevBuyCart)
+                  }    
             }else{
                   setBuyCart(buyCart.filter(item => item.idDress != id)) 
             }
-      }
-      
-      
+      }     
 }
  function totalPrice(){
-      //  let totalPrice = 0
-      //  const findeBuyCart = buyCart.findIndex(item => item.count != 0)
-      //  const a = buyCart[findeBuyCart].idDress
-      
-      //  const finder = dressList.find(item => item.id == a)
-      //  totalPrice = totalPrice + ((finder.price) * (a.count))
-      //  return totalPrice
       let total = 0
       buyCart.forEach(item => {
-            
             const dressPrice = dressList.find(dress => dress.id == item.idDress)?.price 
-            // console.log({dress:dressPrice ,count:item.count})
             total += item.count * dressPrice     
       })
       console.log(total)
-      setTotalCost(total)
-      
+      setTotalCost(total)  
  }
-
   return (
     <div className="App">
           <div>
             {console.log(buyCart)}
-            { console.log(x)}
-            { console.log(c)}
                <header className=' w-full h-[60px] bg-[#203040] text-white flex justify-start items-center pl-[10px]'>
                     <p>React Shoppin cart</p>
                </header>
@@ -85,18 +70,18 @@ function removeFN(id){
                     <div className='dress-wrapper xl:w-[74%] flex flex-col justify-between'>
                           <div className='option-wrapper w-full h-[60px] border-b-[2px] flex justify-between items-center border-gray-200  '>
                               <div className='w-full'> 
-                                   <p>6 Products</p>
+                                   <p>{dressList.length} Products</p>
                               </div>    
                               <div className='w-full'>
                                   <span className='mr-[8px]'>Order</span>
-                                  <select name="price">
+                                  <select value={costMode} onChange={(e) => setCostMode(e.target.value)} name="cost">
                                         <option value="Lowest">Lowest</option>
                                         <option value="Highest">Highest</option>
                                   </select>
                               </div>
                               <div className='w-full'> 
                                   <span className='mr-[8px]'>Filter</span>
-                                  <select value={filterDress} onChange={(e)=>setFilterDress(e.target.value)} name="size">
+                                  <select value={filterDress} onChange={(e)=> setFilterDress(e.target.value)} name="size">
                                         <option value="ALL">ALL</option>
                                         <option value="Xs">Xs</option>
                                         <option value="S">S</option>
@@ -109,26 +94,41 @@ function removeFN(id){
                           </div>
                           <div className='cart w-full h-full grid justify-between items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[30px] '>
                                  {
-                                  dressList.filter(item=> {if( filterDress == 'Xs'){
-                                    if(item.size.includes ('Xs')){
-                                         return item     
-                                    }}else if(item.size.includes ('Xs')){
+                                  dressList.filter(item=> 
+                                    {if(filterDress == "Xs"){
+                                         if(item.size.includes("Xs")){
                                           return item
-                                    }else if(item.size.includes ('S')){
-                                          return item
-                                    }else if(item.size.includes ('M')){
-                                          return item
-                                    }else if(item.size.includes ('L')){
-                                          return item
-                                    }else if(item.size.includes ('XL')){
-                                          return item
-                                    }
-                                    else if(item.size.includes ('XXL')){
-                                          return item
-                                    }
+                                         }
+                                    }else if(filterDress == "S"){
+                                          if(item.size.includes("S")){
+                                           return item
+                                          }
+                                     }else if(filterDress == "M"){
+                                          if(item.size.includes("M")){
+                                           return item
+                                          }
+                                     }else if(filterDress == "L"){
+                                          if(item.size.includes("L")){
+                                           return item
+                                          }
+                                     }else if(filterDress == "XL"){
+                                          if(item.size.includes("XL")){
+                                           return item
+                                          }
+                                     }else if(filterDress == "XXL"){
+                                          if(item.size.includes("XXL")){
+                                           return item
+                                          }
+                                     }
                                     else{
                                           return item
-                                    }}).map(item => {
+                                    }}).sort((a,b) => {
+                                          if(costMode == "Highest"){
+                                                return b.price - a.price
+                                          }else{
+                                                return a.price - b.price
+                                          }
+                                    }).map(item => {
                                     return( 
                                       <Cart img={item.img} price={item.price} title={item.title} id={item.id} addDressToCard={addDressToCardFN}/>
                                      )})     
@@ -139,12 +139,11 @@ function removeFN(id){
                           <div> 
                               {buyMode?.mode == "wantToBuy" ?
                                <div className='w-full h-[60px]  flex justify-center items-center border-b-[2px] border-gray-200'>
-                                     <p>you have {contBuyCart()} in cart</p>
+                                     <p>you have {buyCart.length} in cart</p>
                                </div>:
                                <div className='w-full h-[60px]  flex justify-center items-center border-b-[2px] border-gray-200'>
                                      <p>Cart is empty</p>
                                </div>
-                              
                               }
                                <div className='w-full h-full pl-[30px]  pt-[15px] ' >
                                     {buyCart.map(item => {

@@ -1,0 +1,6 @@
+.hover-color-change:hover a {
+    color:orangered ;
+}
+.hover-color-change:hover{
+    cursor: pointer;
+}
