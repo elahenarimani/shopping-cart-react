@@ -66,21 +66,21 @@ function removeFN(id){
                <header className=' w-full h-[60px] bg-[#203040] text-white flex justify-start items-center pl-[10px]'>
                     <p>React Shoppin cart</p>
                </header>
-               <main className=' w-full lg:max-w[1024px] xl:max-w-[80%] h-full pl-[5px] pr-[10px] flex flex-col justify-between items-center xl:flex-row xl:justify-between xl:items-start xl:gap-[5px]  '>
-                    <div className='dress-wrapper xl:w-[74%] flex flex-col justify-between'>
-                          <div className='option-wrapper w-full h-[60px] border-b-[2px] flex justify-between items-center border-gray-200  '>
-                              <div className='w-full'> 
+               <main className=' w-full lg:max-w[1024px] xl:max-w-[80%] h-full pl-[10px] pr-[10px] flex flex-col justify-center items-center  xl:flex-row xl:justify-between xl:items-start xl:gap-[10px] 2xl:gap-[50px]  '>
+                    <div className='dress-wrapper w-full xl:min-w-[74%] flex flex-col justify-between '>
+                          <div className='option-wrapper  w-full h-[60px] border-b-[2px] flex justify-between items-center border-gray-200  '>
+                              <div className='w-full whitespace-nowrap'> 
                                    <p>{dressList.length} Products</p>
                               </div>    
-                              <div className='w-full'>
-                                  <span className='mr-[8px]'>Order</span>
+                              <div className='w-full whitespace-nowrap'>
+                                  <span className='mr-[8px] '>Order</span>
                                   <select value={costMode} onChange={(e) => setCostMode(e.target.value)} name="cost">
                                         <option value="Lowest">Lowest</option>
                                         <option value="Highest">Highest</option>
                                   </select>
                               </div>
-                              <div className='w-full'> 
-                                  <span className='mr-[8px]'>Filter</span>
+                              <div className='w-full whitespace-nowrap'> 
+                                  <span className='mr-[8px] '>Filter</span>
                                   <select value={filterDress} onChange={(e)=> setFilterDress(e.target.value)} name="size">
                                         <option value="ALL">ALL</option>
                                         <option value="Xs">Xs</option>
@@ -92,7 +92,7 @@ function removeFN(id){
                                   </select>
                               </div>
                           </div>
-                          <div className='cart w-full h-full grid justify-between items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[30px] '>
+                          <div className='cart w-full h-full grid justify-between items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[5px] xl:gap-[20px]'>
                                  {
                                   dressList.filter(item=> 
                                     {if(filterDress == "Xs"){
@@ -135,17 +135,17 @@ function removeFN(id){
                                  }          
                           </div>
                     </div>
-                    <div className='calc-Price h-full w-[25%] xl:w-[25%] pb-[20px] '>
-                          <div> 
+                    <div className='calc-Price w-[280px] xl:min-w-[24%] h-full flex flex-col justify-between  pb-[20px]   '>
+                          <div className='w-full h-full'> 
                               {buyMode?.mode == "wantToBuy" ?
                                <div className='w-full h-[60px]  flex justify-center items-center border-b-[2px] border-gray-200'>
-                                     <p>you have {buyCart.length} in cart</p>
+                                     <p className='w-full '>you have {buyCart.length} in cart</p>
                                </div>:
-                               <div className='w-full h-[60px]  flex justify-center items-center border-b-[2px] border-gray-200'>
-                                     <p>Cart is empty</p>
+                               <div className='w-full h-[60px]  flex flex-col justify-center items-center border-b-[2px] border-gray-200 '>
+                                     <p className='w-full  '>Cart is empty</p>
                                </div>
                               }
-                               <div className='w-full h-full pl-[30px]  pt-[15px] ' >
+                               <div className='w-full h-full pt-[15px] ' >
                                     {buyCart.map(item => {
                                            const finder = dressList.find(dress => dress.id == item.idDress)
                                            return(
@@ -156,7 +156,7 @@ function removeFN(id){
                                            <div className="w-full h-full flex flex-col justify-between ">
                                                   <div className='w-full h-full flex  justify-between items-center'>
                                                       <p>Total: {totalCost}</p>
-                                                      <Button onClickHandler={() => setDataMode("active")}>Proceed</Button>
+                                                      <Button color={"yellow"} onClickHandler={() => setDataMode("active")}>Proceed</Button>
                                                   </div>
                                                   <div className='w-full h-full'>
                                                       {dataMode == "active"   ?  <SendPersonalInformation/> : <></>}
