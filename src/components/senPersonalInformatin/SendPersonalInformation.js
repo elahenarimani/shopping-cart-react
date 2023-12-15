@@ -11,7 +11,7 @@ function SendPersonalInformation (){
                                                             <input className='w-full h-[40px] border-[2px] border-gray-200 outline-none ' />
                                                    </div>
                                                    <div className='w-full'>
-                                                            <p className='text-left pl-[10px] mb-[5px]'>AddDress</p>
+                                                            <p className='text-left pl-[10px] mb-[5px]'>Address</p>
                                                             <input className='w-full h-[40px] border-[2px] border-gray-200 outline-none ' />
                                                    </div>
                                                    

@@ -54,7 +54,8 @@ function removeFN(id){
       let total = 0
       buyCart.forEach(item => {
             const dressPrice = dressList.find(dress => dress.id == item.idDress)?.price 
-            total += item.count * dressPrice     
+            total += item.count * dressPrice 
+            total = Number(total.toFixed(2))    
       })
       console.log(total)
       setTotalCost(total)  
@@ -168,7 +169,7 @@ function removeFN(id){
                     </div>
                </main>
                <footer className='w-full h-[60px] '>
-                      <p className='w-full h-full bg-[#203040] flex justify-center items-center text-white text-[18px]'>All right is reserved</p>
+                      <p className='w-full h-[60px] bg-[#203040] flex justify-center items-center text-white text-[18px]'>All right is reserved</p>
                </footer>
           </div>
     </div>

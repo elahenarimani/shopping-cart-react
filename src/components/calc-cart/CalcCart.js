@@ -16,8 +16,7 @@ function CalcCart({img,count,price,title,remove,id}){
                         <span>{count}</span>
                         </div>
                         <Button color={"gray"} onClickHandler={() => {remove(id)}}>remove</Button>
-                   </div>
-                   
+                   </div> 
                 </div>      
              </div>
             
